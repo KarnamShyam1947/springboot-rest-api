@@ -1,11 +1,11 @@
 package com.shyam.exceptions;
 
 public class EntityAlreadyExistsException extends Exception {
-    EntityAlreadyExistsException() {
-        super("Entity Alreay Exists");
+    public EntityAlreadyExistsException() {
+        super("Entity Already Exists");
     }
     
-    EntityAlreadyExistsException(String str) {
+    public EntityAlreadyExistsException(String str) {
         super(str);
     }
 }

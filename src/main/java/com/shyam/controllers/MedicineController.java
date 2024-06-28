@@ -1,31 +1,37 @@
 package com.shyam.controllers;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.shyam.dto.request.MedicineDTO;
 import com.shyam.entities.MedicineEntity;
+import com.shyam.exceptions.EntityAlreadyExistsException;
 import com.shyam.exceptions.EntityNotFoundException;
 import com.shyam.services.MedicineService;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.EntityExistsException;
 import lombok.RequiredArgsConstructor;
 
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/medicine")
+@RequestMapping("/api/v1/medicine")
 @Tag(
     name = "Medicine Controller",
     description = "This controller manages the Medicines CRUD operations. Only For admin"
@@ -39,12 +45,30 @@ public class MedicineController {
         return medicineService.getAll();
     }
    
-    @PostMapping("/")
-    public ResponseEntity<?> add(@RequestBody MedicineDTO dto) {
+    // @PostMapping("/")
+    @RequestMapping(
+    path = "/", 
+    method = RequestMethod.POST, 
+    consumes = {"multipart/form-data"},
+    produces = { "application/json" })
+    ResponseEntity<?> add(
+        @RequestParam(name = "file") MultipartFile file,
+        @RequestPart(name = "name") String name,
+        @RequestPart(name = "price") String price,
+        @RequestPart(name = "description") String description
+    ) throws EntityAlreadyExistsException {
+        MedicineDTO dto = MedicineDTO
+                            .builder()
+                            .description(description)
+                            .name(name)
+                            .file(file)
+                            .price(Integer.parseInt(price))
+                            .build();
+
         MedicineEntity save = medicineService.save(dto);
 
         if (save == null) {
-            throw new EntityExistsException("Medicine alreay exists with name : " + dto.getName());
+            throw new EntityAlreadyExistsException("Medicine already exists with name : " + dto.getName());
         }
         System.out.println("save...........");
         return ResponseEntity

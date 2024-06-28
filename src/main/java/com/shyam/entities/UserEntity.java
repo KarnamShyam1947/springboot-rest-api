@@ -1,5 +1,10 @@
 package com.shyam.entities;
 
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shyam.enums.Role;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -23,7 +28,14 @@ public class UserEntity {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
+    @JsonIgnore
+    private String uniqueToken;
+
+    @JsonIgnore
+    private LocalDateTime expirationTime;
+
     private String name;
     private String email;
     private String password;
+    private String department;
 }

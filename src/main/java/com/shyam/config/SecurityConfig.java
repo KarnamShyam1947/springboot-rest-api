@@ -1,10 +1,8 @@
 package com.shyam.config;
 
-import com.shyam.config.custom.AuthEntryPoint;
-import com.shyam.config.custom.MyAccessDeniedHandler;
-import com.shyam.config.custom.MyUserDetailsService;
-import com.shyam.filters.JwtAuthFilter;
-import lombok.RequiredArgsConstructor;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +15,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.shyam.config.custom.AuthEntryPoint;
+import com.shyam.config.custom.MyAccessDeniedHandler;
+import com.shyam.config.custom.MyUserDetailsService;
+import com.shyam.filters.JwtAuthFilter;
+
+import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
@@ -44,7 +49,8 @@ public class SecurityConfig {
 
          // other public endpoints of your API may be appended to this array
          "/public",
-         "/auth/**",
+         "/api/v1/auth/**",
+         "/api/v1/home/**",
          "/h2-console/**"
     };
 
@@ -74,10 +80,13 @@ public class SecurityConfig {
                 AbstractHttpConfigurer::disable
         );
 
+        // security.cors(Customizer.withDefaults());
+
         security.authorizeHttpRequests(
                 authorizer -> authorizer
                                 .requestMatchers(WHITELIST_AUTH_URLS).permitAll()
-                                .requestMatchers("/medicine/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/v1/medicine/**").hasAuthority("ADMIN")
+                                // .requestMatchers("/api/v1/medicine/**").permitAll()
                                 .anyRequest().authenticated()
         );
 
@@ -99,5 +108,38 @@ public class SecurityConfig {
 
         return security.build();
     }
+
+
+    // @Bean
+    // CorsConfigurationSource corsConfigurationSource() {
+    //     CorsConfiguration configuration = new CorsConfiguration();
+        
+    //     configuration.setAllowedOrigins(List.of(
+    //                                         "http://localhost:5173/",
+    //                                         // "http://127.0.0.1:5500/test.html",
+    //                                         "http://127.0.0.1:5500/"
+    //                                     )
+    //     );
+    //     configuration.setAllowedMethods(List.of(
+    //                                         "GET",
+    //                                         "POST",
+    //                                         "PUT",
+    //                                         "DELETE"
+    //                                     )
+    //     );
+    //     configuration.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION));
+    //     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    //     source.registerCorsConfiguration("/**", configuration);
+    //     return source;
+    // }
+
+    // @Bean
+    // public WebMvcConfigurer corsConfigurer(){
+    //     return new WebMvcConfigurer(){
+    //        public void addCorsMappings(final CorsRegistry registry){
+    //            registry.addMapping("/**").allowedHeaders("*").allowedMethods("*");
+    //         }
+    //     };
+    // }
 
 }

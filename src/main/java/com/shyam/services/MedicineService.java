@@ -1,6 +1,8 @@
 package com.shyam.services;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
@@ -17,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 public class MedicineService {
     
     private final MedicineRepository medicineRepository;
+    private final CloudinaryService cloudinaryService;
     private final ModelMapper mapper;
 
     public Optional<MedicineEntity> getById(int id) {
@@ -27,18 +30,24 @@ public class MedicineService {
         return medicineRepository.findAll();
     }
 
+    @SuppressWarnings("rawtypes")
     public MedicineEntity save(MedicineDTO dto) {
         MedicineEntity check = medicineRepository.findByName(dto.getName());
         if (check != null) {
             return null;
         }
         
+        Map res = cloudinaryService.uploadToCloud(dto.getFile(), "medicines");
         MedicineEntity medicine = mapper.map(dto, MedicineEntity.class);
+        medicine.setImageUrl((String) (res.get("secure_url")));
+        medicine.setPublicId((String) (res.get("public_id")));
         medicine.setId(0);
+
         return medicineRepository.save(medicine);
     }
 
     public void delete(MedicineEntity medicineEntity) {
+        cloudinaryService.deleteFromCloud(medicineEntity.getPublicId());
         medicineRepository.delete(medicineEntity);
     }
 

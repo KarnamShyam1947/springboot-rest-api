@@ -90,7 +90,7 @@ public class GlobalExceptionHandler {
 
         errorResponse.setPath(request.getServletPath());
         errorResponse.setMessage("Bad request : submit form without error");
-        errorResponse.setStatusCode(HttpStatus.UNAUTHORIZED.value());
+        errorResponse.setStatusCode(HttpStatus.BAD_REQUEST.value());
 
         BindingResult bindingResult = ((MethodArgumentNotValidException)e).getBindingResult();
         List<ObjectError> allErrors = bindingResult.getAllErrors();

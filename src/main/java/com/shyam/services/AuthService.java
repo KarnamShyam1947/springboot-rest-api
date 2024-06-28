@@ -1,13 +1,19 @@
 package com.shyam.services;
 
+import com.shyam.config.custom.MyUserDetails;
 import com.shyam.dto.request.LoginRequest;
+import com.shyam.dto.request.UserPasswordRequest;
 import com.shyam.dto.request.UserRequest;
 import com.shyam.entities.UserEntity;
 import com.shyam.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+
+import java.time.LocalDateTime;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -46,6 +52,29 @@ public class AuthService {
 
     public UserEntity getUserById(int userId) {
         return userRepository.findById(userId);
+    }
+
+    public UserEntity setPassword(UserPasswordRequest request) {
+        UserEntity user = userRepository.findByUniqueToken(request.getToken());
+        
+        if (user == null) 
+            throw new RuntimeException("Invalid token. Please check the token");
+        
+        else if (user.getExpirationTime().isBefore(LocalDateTime.now())) 
+            throw new RuntimeException("Link expired contact admin for new link");
+
+        else
+            user.setUniqueToken(null);
+            user.setExpirationTime(null);
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+            return userRepository.save(user);
+        
+    }
+
+    public UserEntity getCurrentUser() {
+        MyUserDetails user = ((MyUserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        return user.getUserEntity();
     }
 
 }

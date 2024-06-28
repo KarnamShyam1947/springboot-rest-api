@@ -24,6 +24,8 @@ public class MedicineEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private String name;
     private int price;
+    private String name;
+    private String imageUrl;
+    private String publicId;
 }

@@ -1,8 +1,11 @@
 package com.shyam.controllers;
 
+import java.util.Map;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shyam.config.custom.MyUserDetails;
 import com.shyam.dto.request.LoginRequest;
 import com.shyam.dto.request.RefreshTokenRequest;
+import com.shyam.dto.request.UserPasswordRequest;
 import com.shyam.dto.request.UserRequest;
 import com.shyam.dto.response.RefreshTokenResponse;
 import com.shyam.dto.response.UserResponse;
@@ -25,12 +29,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+@CrossOrigin
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Tag(
     name = "Authentication Controller",
-    description = "This controller manages the authentication and autherization of User"
+    description = "This controller manages the authentication and authorization of User"
 )
 public class AuthController {
 
@@ -102,6 +107,14 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.OK.value())
                 .body(refreshTokenResponse);
+    }
+
+    @PostMapping("/set-password")
+    public ResponseEntity<?> setPassword(@Valid @RequestBody UserPasswordRequest request) {
+        authService.setPassword(request);
+        return ResponseEntity
+                .status(HttpStatus.OK.value())
+                .body(Map.of("message", "password updated"));
     }
 
 }
