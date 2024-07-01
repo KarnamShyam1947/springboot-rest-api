@@ -18,7 +18,9 @@ import freemarker.template.Template;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class EmailService {
@@ -60,7 +62,7 @@ public class EmailService {
             javaMailSender.send(mimeMessage);
         } 
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
     }
@@ -97,7 +99,7 @@ public class EmailService {
 
         } 
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
 
     }

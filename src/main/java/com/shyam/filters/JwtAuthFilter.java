@@ -9,6 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -41,7 +43,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         try {
             if(authHeader == null || !authHeader.startsWith("Bearer ")) {
-                System.out.println("Authorization header is missing");
+                log.error("Authorization header is missing");
                 filterChain.doFilter(request, response);
                 return;
             }

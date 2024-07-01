@@ -11,7 +11,9 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.api.ApiResponse;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CloudinaryService {
@@ -29,7 +31,7 @@ public class CloudinaryService {
             return upload;
         } 
         catch (IOException e) {
-            System.out.println(e);
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -40,7 +42,7 @@ public class CloudinaryService {
             System.out.println(delete);
         } 
         catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 }

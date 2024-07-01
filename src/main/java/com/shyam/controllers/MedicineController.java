@@ -1,6 +1,5 @@
 package com.shyam.controllers;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -59,9 +58,9 @@ public class MedicineController {
     ) throws EntityAlreadyExistsException {
         MedicineDTO dto = MedicineDTO
                             .builder()
-                            .description(description)
                             .name(name)
                             .file(file)
+                            .description(description)
                             .price(Integer.parseInt(price))
                             .build();
 

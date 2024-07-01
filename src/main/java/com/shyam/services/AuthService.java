@@ -7,6 +7,7 @@ import com.shyam.dto.request.UserRequest;
 import com.shyam.entities.UserEntity;
 import com.shyam.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -57,11 +59,15 @@ public class AuthService {
     public UserEntity setPassword(UserPasswordRequest request) {
         UserEntity user = userRepository.findByUniqueToken(request.getToken());
         
-        if (user == null) 
+        if (user == null) {
+            log.error("Invalid token. Please check the token");
             throw new RuntimeException("Invalid token. Please check the token");
+        }
         
-        else if (user.getExpirationTime().isBefore(LocalDateTime.now())) 
+        else if (user.getExpirationTime().isBefore(LocalDateTime.now())) {
+            log.error("Link expired contact admin for new link");
             throw new RuntimeException("Link expired contact admin for new link");
+        }
 
         else
             user.setUniqueToken(null);

@@ -1,6 +1,10 @@
 package com.shyam.entities;
 
+import com.shyam.enums.OrderStatus;
+
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -17,6 +21,9 @@ public class OrderEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Enumerated(value = EnumType.STRING)
+    private OrderStatus orderStatus;
 
     private int userId;
     private int quantity;

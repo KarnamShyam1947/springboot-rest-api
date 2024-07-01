@@ -7,12 +7,17 @@ import org.springframework.stereotype.Service;
 
 import com.shyam.dto.request.AppointmentRequest;
 import com.shyam.entities.AppointmentEntity;
+import com.shyam.entities.OrderEntity;
 import com.shyam.entities.UserEntity;
 import com.shyam.enums.Role;
+import com.shyam.exceptions.CustomAccessDeniedException;
+import com.shyam.exceptions.EntityNotFoundException;
 import com.shyam.repositories.AppointmentRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AppointmentService {
@@ -30,7 +35,7 @@ public class AppointmentService {
             return appointmentRepository.save(appointment);
         } 
         catch (Exception e) {
-            System.out.println(e);
+            log.error(e.getMessage());
             return null;
         }
     }
@@ -44,6 +49,22 @@ public class AppointmentService {
         
         else
             return appointmentRepository.getPatientAppointments(currentUser.getId());
+    }
+
+    public void cancleAppointment(int appointmentId) throws EntityNotFoundException, CustomAccessDeniedException {
+        AppointmentEntity appointment = appointmentRepository
+                            .findById(appointmentId)
+                            .orElseThrow(
+                                () -> new EntityNotFoundException("Unable to find Appointment with id : " + appointmentId)
+                            );
+
+        UserEntity currentUser = authService.getCurrentUser();
+        if (appointment.getUserId() != currentUser.getId()) {
+            log.error("User " + currentUser.getName() + " trying to access anther user resource");
+            throw new CustomAccessDeniedException("you are trying to access anther user resource", "/delete-appointment/");
+        }
+
+        appointmentRepository.delete(appointment);
     }
 
 }

@@ -1,9 +1,6 @@
 package com.shyam.services;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.UUID;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -47,4 +44,9 @@ public class DoctorService {
         return userRepository.findByDepartment(department);
     }
 
+    public void deleteDoctor(int id) {
+        UserEntity doctor = userRepository.findById(id);
+        userRepository.delete(doctor);
+    }
+    
 }

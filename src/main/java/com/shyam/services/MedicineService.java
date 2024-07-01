@@ -1,6 +1,5 @@
 package com.shyam.services;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.shyam.dto.request.MedicineDTO;
 import com.shyam.entities.MedicineEntity;
 import com.shyam.repositories.MedicineRepository;
+import com.shyam.repositories.OrderRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +20,7 @@ public class MedicineService {
     
     private final MedicineRepository medicineRepository;
     private final CloudinaryService cloudinaryService;
+    private final OrderRepository orderRepository;
     private final ModelMapper mapper;
 
     public Optional<MedicineEntity> getById(int id) {
@@ -48,6 +49,7 @@ public class MedicineService {
 
     public void delete(MedicineEntity medicineEntity) {
         cloudinaryService.deleteFromCloud(medicineEntity.getPublicId());
+        orderRepository.deleteByMedicineId(medicineEntity.getId());
         medicineRepository.delete(medicineEntity);
     }
 
