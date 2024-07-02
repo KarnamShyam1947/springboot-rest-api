@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 
 import com.shyam.dto.request.AppointmentRequest;
 import com.shyam.entities.AppointmentEntity;
-import com.shyam.entities.OrderEntity;
 import com.shyam.entities.UserEntity;
 import com.shyam.enums.Role;
 import com.shyam.exceptions.CustomAccessDeniedException;

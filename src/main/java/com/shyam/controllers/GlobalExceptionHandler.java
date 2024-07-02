@@ -14,6 +14,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import com.shyam.dto.response.ApiErrorResponse;
 import com.shyam.exceptions.AuthorizationHeaderMissingException;
@@ -60,6 +61,19 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(value = EntityNotFoundException.class)
     public ResponseEntity<ApiErrorResponse> handleEntityNotFoundException(EntityNotFoundException e) {
+        ApiErrorResponse errorResponse = new ApiErrorResponse();
+
+        errorResponse.setPath(request.getServletPath());
+        errorResponse.setMessage(e.getMessage());
+        errorResponse.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+        return ResponseEntity
+                .status(errorResponse.getStatusCode())
+                .body(errorResponse);
+    }
+    
+    @ExceptionHandler(value = NoResourceFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleNoResourceFoundException(NoResourceFoundException e) {
         ApiErrorResponse errorResponse = new ApiErrorResponse();
 
         errorResponse.setPath(request.getServletPath());

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Title</title>
+    </head>
+
+    <body>
+        <h1>Hello, World</h1>
+        <hr>
+        <script>
+            const data = {
+                username : "karnamshyam9009@gmail.com",
+                password : "shyam"
+            };
+
+            fetch("http://localhost:8080/api/v1/auth/login", {
+                method: "POST",
+                body: JSON.stringify(data),
+                headers: new Headers({
+                    "Content-Type" : "application/json"
+                })
+            })
+            .then(res => res.json())
+            .then(r => console.log(r))
+            .catch(e => console.log(e))
+        </script>
+    </body>
+</html>

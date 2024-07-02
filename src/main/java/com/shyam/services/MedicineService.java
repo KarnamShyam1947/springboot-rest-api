@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.shyam.dto.request.MedicineDTO;
 import com.shyam.entities.MedicineEntity;
@@ -47,6 +48,7 @@ public class MedicineService {
         return medicineRepository.save(medicine);
     }
 
+    @Transactional
     public void delete(MedicineEntity medicineEntity) {
         cloudinaryService.deleteFromCloud(medicineEntity.getPublicId());
         orderRepository.deleteByMedicineId(medicineEntity.getId());

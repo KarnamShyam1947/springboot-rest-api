@@ -1,15 +1,16 @@
 package com.shyam.controllers;
 
+import java.util.Map;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
-@CrossOrigin
+// @CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @Tag(
@@ -30,7 +31,7 @@ public class DemoController {
     }
 
     @GetMapping("/public")
-    public String publicMethod() {
-        return "public page";
+    public Object publicMethod() {
+        return Map.of("test", "ok");
     }
 }
