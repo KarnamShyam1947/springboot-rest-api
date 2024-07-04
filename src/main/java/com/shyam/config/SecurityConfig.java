@@ -1,6 +1,5 @@
 package com.shyam.config;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -64,6 +63,7 @@ public class SecurityConfig {
          "/public",
          "/api/v1/auth/**",
          "/api/v1/home/**",
+         "/api/v1/predict/**",
          "/h2-console/**"
     };
 
@@ -112,6 +112,7 @@ public class SecurityConfig {
                 authorizer -> authorizer
                                 .requestMatchers(WHITELIST_AUTH_URLS).permitAll()
                                 .requestMatchers("/api/v1/medicine/**").hasAuthority("ADMIN")
+                                .requestMatchers("/actuator/**").hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
         );
 
